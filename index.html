@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的成长故事</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "Heiti SC", sans-serif;
+        }
+        body {
+            background: url("IMG_20251102_191616.jpg") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            scroll-behavior: smooth;
+        }
+        .story-card {
+            background: rgba(255, 255, 255, 0.92);
+            width: 100%;
+            max-width: 700px;
+            border-radius: 20px;
+            padding: 45px 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+        }
+        .avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #f5f8ff;
+            margin: 0 auto 35px;
+            display: block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        .title {
+            font-size: 32px;
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 600;
+            position: relative;
+        }
+        .title::after {
+            content: "";
+            width: 80px;
+            height: 3px;
+            background: #2c82c9;
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .story-section {
+            margin-bottom: 35px;
+            line-height: 2;
+            font-size: 17px;
+            color: #4a5568;
+        }
+        .story-section strong {
+            color: #2c82c9;
+            font-weight: 600;
+        }
+        .lowlight {
+            color: #718096;
+            font-style: italic;
+        }
+        .certificates-title {
+            font-size: 20px;
+            color: #2d3748;
+            margin: 50px 0 25px;
+            padding-left: 10px;
+            border-left: 4px solid #2c82c9;
+        }
+        .certificates-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        .certificate-item {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #2c82c9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .certificate-item:hover {
+            background: #f1f5f9;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+        .certificate-info {
+            flex: 1;
+        }
+        .certificate-name {
+            font-size: 16px;
+            color: #2d3748;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .certificate-holder {
+            font-size: 14px;
+            color: #64748b;
+        }
+        .certificate-holder span {
+            color: #2c82c9;
+            font-weight: 500;
+        }
+        .view-detail {
+            background: #2c82c9;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin-left: 15px;
+        }
+        .view-detail:hover {
+            background: #246aa5;
+        }
+        .cert-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .cert-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px 25px;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+        .cert-modal.show .modal-content {
+            transform: translateY(0);
+        }
+        .modal-title {
+            font-size: 18px;
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .modal-detail {
+            font-size: 15px;
+            color: #4a5568;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+        .modal-detail p {
+            margin-bottom: 12px;
+        }
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 22px;
+            color: #64748b;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .close-modal:hover {
+            color: #2d3748;
+        }
+        .achievement-tag {
+            display: inline-block;
+            background: #e8f4fd;
+            color: #2c82c9;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 15px;
+            margin: 0 10px 12px 0;
+            box-shadow: 0 2px 8px rgba(44, 130, 201, 0.1);
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 55px;
+            height: 55px;
+            background: #2c82c9;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(44, 130, 201, 0.3);
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.3s ease;
+            transform: translateY(20px);
+            border: none;
+            z-index: 100;
+        }
+        .back-to-top.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @media (max-width: 576px) {
+            .story-card {
+                padding: 30px 20px;
+            }
+            .avatar {
+                width: 150px;
+                height: 150px;
+            }
+            .title {
+                font-size: 26px;
+            }
+            .story-section {
+                font-size: 16px;
+                line-height: 1.9;
+            }
+            .certificates-title {
+                font-size: 18px;
+            }
+            .certificate-item {
+                padding: 15px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .view-detail {
+                margin-left: 0;
+                margin-top: 12px;
+                align-self: flex-end;
+            }
+            .modal-content {
+                padding: 25px 20px;
+            }
+            .back-to-top {
+                width: 50px;
+                height: 50px;
+                bottom: 30px;
+                right: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="story-card">
+        <img src="mmexport1762081920969.png" alt="我的头像" class="avatar">
+        <h1 class="title">在孤独里长出的力量</h1>
+        
+        <div class="story-section">
+            我的童年，从小学三年级开始有了不一样的底色——被老师误解、“穿小鞋”的日子，一熬就是三年。那段时光里，孤独是常态：父母为了工作远走他乡，校园里没有并肩说话的伙伴，连课间喧闹的走廊，对我来说都像隔着一层透明的墙。
+        </div>
+        
+        <div class="story-section">
+            印象最深的一次，班级里丢了同学的文具，我莫名成了被怀疑的对象。面对一片质疑的目光，我没有哭，而是一点点说出自己的行踪、找同学帮忙作证，最后终于洗清了“小偷”的冤枉。可那次辩解后，我还是没等来朋友，大家依旧习惯性地和我保持距离。
+        </div>
+        
+        <div class="story-section">
+            就这样到了小学毕业，拍毕业照那天，我站在队伍边缘，最后拿到的照片里，却没有我的身影——像是那段被忽略的时光，连一张纸质的纪念都没留下。后来上了初中，偶尔听到同学说“真羡慕你能一个人自由待着”，可他们不知道，<strong>没人懂的自由，时间久了全是孤独</strong>。
+        </div>
+        
+        <div class="story-section">
+            也是从那时起，我开始在网络上找“事情做”，偶然接触到Python编程后，像找到了一扇新的门。从跟着教程敲第一行代码，到自己写小脚本解决问题，再到独立接项目，每一次进步都让我更踏实。现在的我，不仅能通过编程<strong>独立获得经济收入</strong>，还拿到了不少编程相关的证书，那些曾经独自熬过的日子，终于变成了支撑我的力量。
+        </div>
+
+        <h3 class="certificates-title">我的编程与安全证书</h3>
+        <ul class="certificates-list">
+            <li class="certificate-item" data-cert="python">
+                <div class="certificate-info">
+                    <div class="certificate-name">Python全栈开发工程师认证</div>
+                    <div class="certificate-holder">证书持有者：<span>朱悦嘉</span></div>
+                </div>
+                <button class="view-detail">查看详情</button>
+            </li>
+            <li class="certificate-item" data-cert="data">
+                <div class="certificate-info">
+                    <div class="certificate-name">数据分析与可视化专业证书</div>
+                    <div class="certificate-holder">证书持有者：<span>朱悦嘉</span></div>
+                </div>
+                <button class="view-detail">查看详情</button>
+            </li>
+            <li class="certificate-item" data-cert="nisp">
+                <div class="certificate-info">
+                    <div class="certificate-name">NISP一级（国家信息安全水平考试）</div>
+                    <div class="certificate-holder">证书持有者：<span>朱悦嘉</span></div>
+                </div>
+                <button class="view-detail">查看详情</button>
+            </li>
+            <li class="certificate-item" data-cert="cisp">
+                <div class="certificate-info">
+                    <div class="certificate-name">CISP（注册信息安全专业人员）</div>
+                    <div class="certificate-holder">证书持有者：<span>朱悦嘉</span></div>
+                </div>
+                <button class="view-detail">查看详情</button>
+            </li>
+            <li class="certificate-item" data-cert="cips-pte">
+                <div class="certificate-info">
+                    <div class="certificate-name">CIPS-PTE（注册信息专业人员-渗透测试工程师）</div>
+                    <div class="certificate-holder">证书持有者：<span>朱悦嘉</span></div>
+                </div>
+                <button class="view-detail">查看详情</button>
+            </li>
+            <li class="certificate-item" data-cert="cissp">
+                <div class="certificate-info">
+                    <div class="certificate-name">CISSP（国际注册信息系统安全专家）</div>
+                    <div class="certificate-holder">证书持有者：<span>朱悦嘉</span></div>
+                </div>
+                <button class="view-detail">查看详情</button>
+            </li>
+        </ul>
+        
+        <div class="achievement-area">
+            <span class="achievement-tag">Python全栈开发</span>
+            <span class="achievement-tag">数据分析</span>
+            <span class="achievement-tag">信息安全（NISP/CISP）</span>
+            <span class="achievement-tag">渗透测试（CIPS-PTE）</span>
+            <span class="achievement-tag">国际安全认证（CISSP）</span>
+            <span class="achievement-tag">经济独立</span>
+        </div>
+    </div>
+
+    <div class="cert-modal" id="certModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">&times;</button>
+            <h3 class="modal-title" id="modalTitle">证书详情</h3>
+            <div class="modal-detail" id="modalDetail">
+            </div>
+        </div>
+    </div>
+
+    <button class="back-to-top" id="backToTop">↑</button>
+
+    <script>
+        // 回到顶部功能
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('show', window.pageYOffset > 300);
+        });
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 证书详情弹窗功能
+        const certModal = document.getElementById('certModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDetail = document.getElementById('modalDetail');
+        const viewDetailBtns = document.querySelectorAll('.view-detail');
+
+        // 证书详情数据（含新增的NISP/CISP/CIPS-PTE/CISSP）
+        const certDetails = {
+            python: {
+                title: "Python全栈开发工程师认证",
+                detail: `
+                    <p><strong>发证机构</strong>：全国计算机技术与软件专业技术资格（水平）考试中心</p>
+                    <p><strong>发证时间</strong>：2024年3月</p>
+                    <p><strong>证书编号</strong>：PYF-202403-0862</p>
+                    <p><strong>认证内容</strong>：掌握Python Web开发（Django/Flask框架）、前端基础（HTML/CSS/JS）、数据库设计与优化（MySQL/MongoDB），能独立完成从需求分析到项目部署的全流程开发。</p>
+                    <p><strong>持有者</strong>：朱悦嘉</p>
+                `
+            },
+            data: {
+                title: "数据分析与可视化专业证书",
+                detail: `
+                    <p><strong>发证机构</strong>：中国数据分析行业协会
